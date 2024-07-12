@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjetoPizzaria.Dto;
+using ProjetoPizzaria.Models;
 using ProjetoPizzaria.Services.Pizza;
 
 namespace ProjetoPizzaria.Controllers
@@ -23,6 +24,12 @@ namespace ProjetoPizzaria.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Editar(int Id)
+        {
+            var pizza = await _pizzaInterface.GetPizzaPorId(Id);
+            return View(pizza);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cadastrar(PizzaCriacaoDto pizzaCriacaoDto, IFormFile foto)
@@ -37,5 +44,22 @@ namespace ProjetoPizzaria.Controllers
                 return View(pizzaCriacaoDto);
             }
         }
+
+        [HttpPost] 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Editar(PizzaModel pizzaModel, IFormFile? foto)
+        {
+            if (ModelState.IsValid)
+            {
+                var pizza = await _pizzaInterface.EditarPizza(pizzaModel, foto);
+                return RedirectToAction("Index", "Pizza");
+            }
+            else
+            {
+                return View(pizzaModel);
+            }
+        }
+        
+
     }
 }

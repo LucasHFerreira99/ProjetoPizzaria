@@ -52,7 +52,8 @@ namespace ProjetoPizzaria.Services.Pizza
                 _context.Add(pizza);
                 await _context.SaveChangesAsync();
                 return pizza;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -62,17 +63,67 @@ namespace ProjetoPizzaria.Services.Pizza
         {
             try
             {
-                return await _context.Pizzas.ToListAsync();
+
+                return await _context.Pizzas.OrderBy(p => p.Sabor).ToListAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public Task<PizzaModel> GetPizzaPorId(int id)
+        public async Task<PizzaModel> GetPizzaPorId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Pizzas.FirstOrDefaultAsync(p => p.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<PizzaModel> EditarPizza(PizzaModel pizza, IFormFile? foto)
+        {
+            try
+            {
+                var pizzaBanco = await _context.Pizzas.AsNoTracking().FirstOrDefaultAsync(pizzaBd => pizzaBd.Id == pizza.Id);
+
+                var nomeCaminhoImagem = "";
+                if (foto != null)
+                {
+                    string caminhoCapaExistente = _sistema + "\\imagem\\" + pizza.Capa;
+
+                    if (File.Exists(caminhoCapaExistente))
+                    {
+                        File.Delete(caminhoCapaExistente);
+                    }
+                    nomeCaminhoImagem = GeraCaminhoArquivo(foto);
+                }
+
+                    pizzaBanco.Sabor = pizza.Sabor;
+                    pizzaBanco.Descricao = pizza.Descricao;
+                    pizzaBanco.Valor = pizza.Valor;
+
+                    if(nomeCaminhoImagem != "")
+                    {
+                        pizzaBanco.Capa = nomeCaminhoImagem;
+                    }
+                    else
+                    {
+                        pizzaBanco.Capa = pizza.Capa;
+                    }
+
+                    _context.Update(pizzaBanco);
+                    await _context.SaveChangesAsync();
+
+                    return pizza;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

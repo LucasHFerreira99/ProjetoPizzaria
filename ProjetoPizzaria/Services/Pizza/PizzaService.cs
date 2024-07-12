@@ -102,23 +102,23 @@ namespace ProjetoPizzaria.Services.Pizza
                     nomeCaminhoImagem = GeraCaminhoArquivo(foto);
                 }
 
-                    pizzaBanco.Sabor = pizza.Sabor;
-                    pizzaBanco.Descricao = pizza.Descricao;
-                    pizzaBanco.Valor = pizza.Valor;
+                pizzaBanco.Sabor = pizza.Sabor;
+                pizzaBanco.Descricao = pizza.Descricao;
+                pizzaBanco.Valor = pizza.Valor;
 
-                    if(nomeCaminhoImagem != "")
-                    {
-                        pizzaBanco.Capa = nomeCaminhoImagem;
-                    }
-                    else
-                    {
-                        pizzaBanco.Capa = pizza.Capa;
-                    }
+                if (nomeCaminhoImagem != "")
+                {
+                    pizzaBanco.Capa = nomeCaminhoImagem;
+                }
+                else
+                {
+                    pizzaBanco.Capa = pizza.Capa;
+                }
 
-                    _context.Update(pizzaBanco);
-                    await _context.SaveChangesAsync();
+                _context.Update(pizzaBanco);
+                await _context.SaveChangesAsync();
 
-                    return pizza;
+                return pizza;
             }
             catch (Exception ex)
             {
@@ -134,7 +134,21 @@ namespace ProjetoPizzaria.Services.Pizza
                 _context.Remove(pizza);
                 await _context.SaveChangesAsync();
                 return pizza;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<PizzaModel>> GetPizzasFiltro(string? pesquisar)
+        {
+            try
+            {
+                var pizzas = await _context.Pizzas.Where(pizzasBanco => pizzasBanco.Sabor.Contains(pesquisar)).ToListAsync();
+                return pizzas;
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

@@ -36,6 +36,12 @@ namespace ProjetoPizzaria.Controllers
             return RedirectToAction("Index", "Pizza");
         }
 
+        public async Task<IActionResult> Detalhes(int id)
+        {
+            var pizza = await _pizzaInterface.GetPizzaPorId(id);
+            return View(pizza);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cadastrar(PizzaCriacaoDto pizzaCriacaoDto, IFormFile foto)

@@ -1,4 +1,5 @@
-﻿using ProjetoPizzaria.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjetoPizzaria.Data;
 using ProjetoPizzaria.Dto;
 using ProjetoPizzaria.Models;
 
@@ -55,6 +56,23 @@ namespace ProjetoPizzaria.Services.Pizza
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<List<PizzaModel>> GetPizzas()
+        {
+            try
+            {
+                return await _context.Pizzas.ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Task<PizzaModel> GetPizzaPorId(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

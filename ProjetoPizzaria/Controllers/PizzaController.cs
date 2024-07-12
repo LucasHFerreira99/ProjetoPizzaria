@@ -12,9 +12,10 @@ namespace ProjetoPizzaria.Controllers
         {
             _pizzaInterface = pizzaInterface;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var pizzas = await _pizzaInterface.GetPizzas();
+            return View(pizzas);
         }
 
         public IActionResult Cadastrar()

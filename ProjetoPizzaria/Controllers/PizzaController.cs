@@ -8,5 +8,10 @@ namespace ProjetoPizzaria.Controllers
         {
             return View();
         }
+
+        public IActionResult Cadastrar()
+        {
+            return View();
+        }
     }
 }

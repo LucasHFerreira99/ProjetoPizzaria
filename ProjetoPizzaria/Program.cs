@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProjetoPizzaria.Data;
+using ProjetoPizzaria.Services.Pizza;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.38-mysql"));
 }
 );
+
+builder.Services.AddScoped<IPizzaInterface, PizzaService>();
 
 var app = builder.Build();
 
